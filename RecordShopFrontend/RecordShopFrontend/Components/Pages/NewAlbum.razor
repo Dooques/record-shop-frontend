@@ -1,0 +1,73 @@
+﻿@page "/albums/new"
+
+@using RecordShopFrontend.Components.Items
+@using RecordShopFrontend.Models
+
+@rendermode InteractiveServer
+
+<div class="container">
+	<PageTitle>@_album.Title - @_album.Artist</PageTitle>
+	<div class="is-flex is-flex-direction-row is-justify-content-center">
+		<div class="column">
+			<AlbumSummary Album="_album" />
+		</div>
+		<div class="column" style="height: 50%">
+			<div class="empty ">
+				<p class="title mx-auto">
+					New Album
+				</p>
+		</div>
+
+			<EditForm class="form column"
+					  FormName="AlbumEditor"
+					  Model="_album"
+					  OnValidSubmit="ConfirmChanges">
+
+				<p class="menu-label my-4">Title</p>
+				<InputText @bind-Value="_album.Title" style="width: 100%;"></InputText>
+
+				<p class="menu-label my-4">Artist</p>
+				<InputText @bind-Value="_album.Artist" style="width: 100%;"></InputText>
+
+				<p class="menu-label my-4">Year</p>
+				<InputNumber @bind-Value="_album.ReleaseYear" style="width: 100%;"></InputNumber>
+
+				<p class="menu-label my-4">Genre</p>
+				<InputText @bind-Value="_album.Genre" style="width: 100%;"></InputText>
+
+				<p class="menu-label my-4">Cover URL</p>
+				<InputText @bind-Value="_album.CoverUrl" style="width: 100%;"></InputText>
+
+				<button type="submit" class="button mt-5">Confirm Changes</button>
+			</EditForm>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public int Id { get; set; }
+
+	private Album _album { get; set; } = new Album(0, "", "", 0, "", 0, "");
+	private bool isLoading = true;
+	private HttpClient client = new();
+
+	public async Task ConfirmChanges()
+	{
+		Console.WriteLine("Setting New Album Async");
+		if (_album == null)
+		{
+			Console.WriteLine("Album is null");
+			return;
+		}
+
+		try
+		{
+			var response = await client.PostAsJsonAsync<Album>($"https://localhost:7077/albums/", _album);
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine($"Exception: {e}");
+		}
+	}
+}

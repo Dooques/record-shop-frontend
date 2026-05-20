@@ -1,9 +1,9 @@
 ﻿@page "/albums/{Id:int}"
+
 @using RecordShopFrontend.Components.Items
 @using RecordShopFrontend.Models
-@using System.Net.Http.Headers
 
-@rendermode InteractiveWebAssembly
+@rendermode InteractiveServer
 
 <div class="container">
 	@if (isLoading || _album is null)
@@ -19,30 +19,39 @@
 				<AlbumSummary Album="_album" />
 			</div>
 			<div class="column" style="height: 50%">
-				<div class="empty "  >
+				<div class="empty ">
 					<p class="title mx-auto">
-						Edit the values of the album
+						Edit Album
 					</p>
 				</div>
 
+				<div class="my-2">
+					<NavLink href=@($"/albums/new")>
+						<button class="button">Create a New Album</button>
+					</NavLink>
+				</div>
+
 				<EditForm class="form column"
-					FormName="Album Editor"
-					Model="@_album"
+					FormName="AlbumEditor"
+					Model="_album"
 					OnValidSubmit="ConfirmChanges">
 
 					<p class="menu-label my-4">Edit Title</p>
-					<InputText @bind-Value="@_album.Title" style="width: 100%;"></InputText>
+					<InputText @bind-Value="_album.Title" style="width: 100%;"></InputText>
 
 					<p class="menu-label my-4">Edit Artist</p>
-					<InputText @bind-Value="@_album.Artist" style="width: 100%;"></InputText>
+					<InputText @bind-Value="_album.Artist" style="width: 100%;"></InputText>
 					
 					<p class="menu-label my-4">Edit Year</p>
-					<InputNumber @bind-Value="@_album.ReleaseYear" style="width: 100%;"></InputNumber>
+					<InputNumber @bind-Value="_album.ReleaseYear" style="width: 100%;"></InputNumber>
 					
 					<p class="menu-label my-4">Edit Genre</p>
 					<InputText @bind-Value="_album.Genre" style="width: 100%;"></InputText>
 					
-					<button class="button mt-5">Confirm Changes</button>
+					<p class="menu-label my-4">Edit Cover</p>
+					<InputText @bind-Value="_album.CoverUrl" style="width: 100%;"></InputText>
+
+					<button type="submit" class="button mt-5">Confirm Changes</button>
 				</EditForm>
 			</div>
 		</div>
@@ -53,41 +62,35 @@
 	[Parameter]
 	public int Id { get; set; }
 
-	private Album? _album { get; set; }
+	private Album _album { get; set; } = new Album(0, "", "", 0, "", 0, "");
 	private bool isLoading = true;
-
+	private HttpClient client = new();
 	public async Task ConfirmChanges()
 	{
 		Console.WriteLine("Running Confirm Changes Async");
 		if (_album == null)
 		{
 			Console.WriteLine("Album is null");
+			return;
 		}
 
 		try
 		{
-			Console.WriteLine(_album.Title);
-			Console.WriteLine(_album.Artist);
-			Console.WriteLine(_album.ReleaseYear);
-			Console.WriteLine(_album.Genre);
-			Console.WriteLine(_album.Stock);
-
-			// client.DefaultRequestHeaders.Clear();
-			// client.DefaultRequestHeaders.Accept.Add(
-			// 	new MediaTypeWithQualityHeaderValue(
-			// 		"application/json"
-			// 	));
+			Console.WriteLine(_album?.Title);
+			Console.WriteLine(_album?.Artist);
+			Console.WriteLine(_album?.ReleaseYear);
+			Console.WriteLine(_album?.Genre);
+			Console.WriteLine(_album?.Stock);
 
 			var response = await client.PutAsJsonAsync<Album>($"https://localhost:7077/albums/", _album);
+			Console.WriteLine(response.RequestMessage);
 			Console.WriteLine(response.StatusCode);
-
 		}
 		catch (Exception e)
 		{
 			Console.WriteLine($"Exception: {e}");
 		}
 	}
-	private HttpClient client = new();
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -95,10 +98,17 @@
 		{
 			_album = await client.GetFromJsonAsync<Album>($"https://localhost:7077/albums/{Id}");
 			isLoading = false;
+
+			Console.WriteLine(_album?.Title);
+			Console.WriteLine(_album?.Artist);
+			Console.WriteLine(_album?.ReleaseYear);
+			Console.WriteLine(_album?.Genre);
+			Console.WriteLine(_album?.Stock);
 		}
 		catch (Exception e)
 		{
 			Console.WriteLine(e.Message);
 		}
+
 	}
 }

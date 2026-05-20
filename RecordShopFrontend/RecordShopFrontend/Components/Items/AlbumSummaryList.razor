@@ -1,10 +1,10 @@
 ﻿@using RecordShopFrontend.Models
 
-<div class="fixed-grid has-4-cols-widescreen has-3-cols-tablet has-2-cols-mobile">
+<div class="fixed-grid has-2-cols-mobile has-3-cols-tablet has-4-cols-desktop gap-3">
 	<div class="grid">
 		@foreach (var album in AlbumList)
 		{
-			<div class="column">
+			<div class="cell pb-6">
 				<AlbumSummary Album="album" />
 			</div>
 		}
