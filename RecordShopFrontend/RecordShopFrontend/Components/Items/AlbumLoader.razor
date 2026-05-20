@@ -1,0 +1,34 @@
+﻿@using RecordShopFrontend.Models
+@rendermode InteractiveWebAssembly
+
+
+@if (isLoading) {
+	<h3>Loading...</h3>
+} else {
+	<AlbumSummaryList AlbumList="_albumsFromApi"/>
+}
+
+@code {
+	private bool isLoading { get; set; } = true;
+	private List<Album> _albumsFromApi { get; set; } = new();
+
+	private string errorCode { get; set; } = string.Empty;
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			var client = new HttpClient();
+			var json = await client.GetFromJsonAsync<List<Album>>("https://localhost:7077/albums");
+			if (json != null) 
+			{
+				isLoading = false;
+				_albumsFromApi = json;
+			}
+		}
+		catch (Exception e)
+		{
+			errorCode = e.Message;
+		}
+	}
+}

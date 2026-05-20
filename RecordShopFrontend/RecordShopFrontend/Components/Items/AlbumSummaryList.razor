@@ -1,0 +1,17 @@
+﻿@using RecordShopFrontend.Models
+
+<div class="fixed-grid has-4-cols-widescreen has-3-cols-tablet has-2-cols-mobile">
+	<div class="grid">
+		@foreach (var album in AlbumList)
+		{
+			<div class="column">
+				<AlbumSummary Album="album" />
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public List<Album> AlbumList { get; set; } = new();
+}

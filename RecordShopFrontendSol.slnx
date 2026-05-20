@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RecordShopFrontend/RecordShopFrontend.Client/RecordShopFrontend.Client.csproj" />
+  <Project Path="RecordShopFrontend/RecordShopFrontend/RecordShopFrontend.csproj" />
+</Solution>

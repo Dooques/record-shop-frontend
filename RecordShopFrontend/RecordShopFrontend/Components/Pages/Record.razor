@@ -1,0 +1,104 @@
+﻿@page "/albums/{Id:int}"
+@using RecordShopFrontend.Components.Items
+@using RecordShopFrontend.Models
+@using System.Net.Http.Headers
+
+@rendermode InteractiveWebAssembly
+
+<div class="container">
+	@if (isLoading || _album is null)
+	{
+		<PageTitle>Loading...</PageTitle>
+		<p>Loading...</p>
+	}
+	else
+	{
+		<PageTitle>@_album.Title - @_album.Artist</PageTitle>
+		<div class="is-flex is-flex-direction-row is-justify-content-center">
+			<div class="column">
+				<AlbumSummary Album="_album" />
+			</div>
+			<div class="column" style="height: 50%">
+				<div class="empty "  >
+					<p class="title mx-auto">
+						Edit the values of the album
+					</p>
+				</div>
+
+				<EditForm class="form column"
+					FormName="Album Editor"
+					Model="@_album"
+					OnValidSubmit="ConfirmChanges">
+
+					<p class="menu-label my-4">Edit Title</p>
+					<InputText @bind-Value="@_album.Title" style="width: 100%;"></InputText>
+
+					<p class="menu-label my-4">Edit Artist</p>
+					<InputText @bind-Value="@_album.Artist" style="width: 100%;"></InputText>
+					
+					<p class="menu-label my-4">Edit Year</p>
+					<InputNumber @bind-Value="@_album.ReleaseYear" style="width: 100%;"></InputNumber>
+					
+					<p class="menu-label my-4">Edit Genre</p>
+					<InputText @bind-Value="_album.Genre" style="width: 100%;"></InputText>
+					
+					<button class="button mt-5">Confirm Changes</button>
+				</EditForm>
+			</div>
+		</div>
+	}
+</div>
+
+@code {
+	[Parameter]
+	public int Id { get; set; }
+
+	private Album? _album { get; set; }
+	private bool isLoading = true;
+
+	public async Task ConfirmChanges()
+	{
+		Console.WriteLine("Running Confirm Changes Async");
+		if (_album == null)
+		{
+			Console.WriteLine("Album is null");
+		}
+
+		try
+		{
+			Console.WriteLine(_album.Title);
+			Console.WriteLine(_album.Artist);
+			Console.WriteLine(_album.ReleaseYear);
+			Console.WriteLine(_album.Genre);
+			Console.WriteLine(_album.Stock);
+
+			// client.DefaultRequestHeaders.Clear();
+			// client.DefaultRequestHeaders.Accept.Add(
+			// 	new MediaTypeWithQualityHeaderValue(
+			// 		"application/json"
+			// 	));
+
+			var response = await client.PutAsJsonAsync<Album>($"https://localhost:7077/albums/", _album);
+			Console.WriteLine(response.StatusCode);
+
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine($"Exception: {e}");
+		}
+	}
+	private HttpClient client = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			_album = await client.GetFromJsonAsync<Album>($"https://localhost:7077/albums/{Id}");
+			isLoading = false;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.Message);
+		}
+	}
+}
