@@ -50,7 +50,7 @@ h1:focus {
     border-color: #929292;
 }
 
-.card {
+grid > .card {
     height: 100%;
     display: flex;
     flex-direction: column;

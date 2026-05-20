@@ -1,0 +1,32 @@
+﻿@using RecordShopFrontend.Models
+
+<div class="card" style="width: 300px;">
+	<NavLink href=@($"/albums/{Album.Id}")>
+		<div class="card-img ">
+			<figure class="img is-4by3 ">
+				@if (Album.CoverUrl != "")
+				{
+					<img src="@Album.CoverUrl"
+						 alt="Album Cover" />
+				}	
+			</figure>
+		</div>
+	</NavLink>
+
+		<div class="card-header mx-4">
+			<p class="card-header-title">@Album.Title</p>
+		</div>
+
+	<div class="card-content mx-0">
+		<div class="content column">
+			<p>
+				@Album.Artist - @Album.Genre
+			</p>		
+		</div>
+	</div></div>
+
+
+@code {
+	[Parameter]
+	public required Album Album { get; set; }
+}

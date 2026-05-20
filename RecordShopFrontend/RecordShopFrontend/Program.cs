@@ -8,6 +8,8 @@ namespace RecordShopFrontend
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
+            
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
@@ -28,6 +30,7 @@ namespace RecordShopFrontend
             }
 
             app.UseHttpsRedirection();
+            app.UseStatusCodePagesWithRedirects("/StatusCode/{0}");
 
             app.UseStaticFiles();
             app.UseAntiforgery();

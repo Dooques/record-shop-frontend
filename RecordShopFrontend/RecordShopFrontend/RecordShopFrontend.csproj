@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RecordShopFrontend.Client\RecordShopFrontend.Client.csproj" />
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.27" />
   </ItemGroup>
 

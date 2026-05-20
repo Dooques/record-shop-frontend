@@ -1,22 +1,24 @@
 ﻿
-<div class="navbar" aria-label="main navigation">
+<nav class="navbar" aria-label="main navigation">
 	<div class="navbar-brand">
 		<NavLink class="navbar-item row" href="/">
 			<img src="images/bb_logo.png" class="image is-32x32 col" />
 			<p class="col">Home</p>
 		</NavLink>
-	</div>
-	<div class="navbar-menu">
+		</div>
+
+	<div class="navbar-menu is-active">
 		<div class="navbar-start">
+			<NavLink class="navbar-item" href=@("/about")>About</NavLink>
+
 			<NavLink class="navbar-item" href="/albums/new">
 				New Record
 			</NavLink>
-
 		</div>
-		<div class="navbar-end"></div>
 	</div>
-</div>
+</nav>
 
 @code {
-
+	private bool isMenuOpen = false;
+	private void ToggleMenu() => isMenuOpen = !isMenuOpen;
 }

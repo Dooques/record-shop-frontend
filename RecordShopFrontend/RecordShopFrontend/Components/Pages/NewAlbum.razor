@@ -63,7 +63,7 @@
 
 		try
 		{
-			var response = await client.PostAsJsonAsync<Album>($"https://localhost:7077/albums/", _album);
+			var response = await client.PostAsJsonAsync<Album>($"https://hjnrlaswp6fivbbom5sejwj2440hrcdb.lambda-url.eu-west-2.on.aws/albums/", _album);
 		}
 		catch (Exception e)
 		{

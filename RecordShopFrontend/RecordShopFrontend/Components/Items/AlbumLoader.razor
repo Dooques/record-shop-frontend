@@ -2,10 +2,25 @@
 @rendermode InteractiveWebAssembly
 
 
-@if (isLoading) {
+@if (isLoading)
+{
 	<h3>Loading...</h3>
-} else {
-	<AlbumSummaryList AlbumList="_albumsFromApi"/>
+}
+else
+{
+	<div class="container mb-6">
+		<div class="columns is-centered">
+			<div class="column">
+				<h4>Album of the Day</h4>
+				<div>
+					<AlbumOfTheDay Album="RandomAlbum()" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<AlbumSummaryList AlbumList="_albumsFromApi" />
 }
 
 @code {
@@ -14,12 +29,17 @@
 
 	private string errorCode { get; set; } = string.Empty;
 
+	public Album RandomAlbum()
+	{
+		return _albumsFromApi[new Random().Next(1, _albumsFromApi.Count)];
+	}
+
 	protected override async Task OnInitializedAsync()
 	{
 		try
 		{
 			var client = new HttpClient();
-			var json = await client.GetFromJsonAsync<List<Album>>("https://localhost:7077/albums");
+			var json = await client.GetFromJsonAsync<List<Album>>("https://hjnrlaswp6fivbbom5sejwj2440hrcdb.lambda-url.eu-west-2.on.aws/albums");
 			if (json != null) 
 			{
 				isLoading = false;

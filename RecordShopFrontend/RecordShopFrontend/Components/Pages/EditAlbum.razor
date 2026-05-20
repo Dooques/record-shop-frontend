@@ -27,7 +27,7 @@
 
 				<div class="my-2">
 					<NavLink href=@($"/albums/new")>
-						<button class="button">Create a New Album</button>
+						<button class="button mt-5" @onclick="DeleteAlbum">Delete Album</button>
 					</NavLink>
 				</div>
 
@@ -65,6 +65,7 @@
 	private Album _album { get; set; } = new Album(0, "", "", 0, "", 0, "");
 	private bool isLoading = true;
 	private HttpClient client = new();
+
 	public async Task ConfirmChanges()
 	{
 		Console.WriteLine("Running Confirm Changes Async");
@@ -82,7 +83,7 @@
 			Console.WriteLine(_album?.Genre);
 			Console.WriteLine(_album?.Stock);
 
-			var response = await client.PutAsJsonAsync<Album>($"https://localhost:7077/albums/", _album);
+			var response = await client.PutAsJsonAsync<Album>($"https://hjnrlaswp6fivbbom5sejwj2440hrcdb.lambda-url.eu-west-2.on.aws/albums/", _album);
 			Console.WriteLine(response.RequestMessage);
 			Console.WriteLine(response.StatusCode);
 		}
@@ -92,11 +93,19 @@
 		}
 	}
 
+	public async Task DeleteAlbum()
+	{
+		var response = await client.DeleteAsync($"https://hjnrlaswp6fivbbom5sejwj2440hrcdb.lambda-url.eu-west-2.on.aws/albums/{Id}");
+		Console.WriteLine(response.RequestMessage);
+		Console.WriteLine(response.StatusCode);
+
+	}
+
 	protected override async Task OnInitializedAsync()
 	{
 		try
 		{
-			_album = await client.GetFromJsonAsync<Album>($"https://localhost:7077/albums/{Id}");
+			_album = await client.GetFromJsonAsync<Album>($"https://hjnrlaswp6fivbbom5sejwj2440hrcdb.lambda-url.eu-west-2.on.aws/albums/{Id}");
 			isLoading = false;
 
 			Console.WriteLine(_album?.Title);
